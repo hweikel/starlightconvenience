@@ -1,0 +1,100 @@
+---
+layout: base.njk
+---
+
+<style>
+  .post-title {
+    margin-top: calc(0.75 * 1.25rem);
+    text-align: center;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 2px;
+  }
+
+  .post-date {
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: calc(0.5 * 1.25rem);
+  }
+
+  .post-body {
+    margin-top: 1.25rem;
+  }
+
+  .post-body p + p,
+  .post-body ul + p,
+  .post-body p + ul,
+  .post-body ol + p,
+  .post-body p + ol,
+  .post-body p + blockquote,
+  .post-body blockquote + p,
+  .post-body blockquote + blockquote,
+  .post-body li + li {
+    margin-top: calc(0.5 * 1.25rem);
+  }
+
+  .post-body blockquote {
+    margin: 0;
+  }
+
+  .post-body blockquote p {
+    padding-left: 1.25rem;
+    max-width: calc(21 * 1.25rem - 1.25rem);
+  }
+
+  .post-body ul {
+    list-style-type: none;
+    margin-left: 2rem;
+  }
+
+  .post-body ol {
+    list-style-type: none;
+    counter-reset: list;
+    margin-left: 1.25rem;
+  }
+
+  .post-body ol > li:before {
+    position: absolute;
+    counter-increment: list;
+    content: counter(list);
+    margin-left: -1.25rem;
+  }
+
+  .post-body ul > li:before {
+    position: absolute;
+    content: '\00B7';
+    margin-left: -1rem;
+  }
+
+  .post-body a:link,
+  .post-body a:visited {
+    background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-position: 0px 92%;
+    background-size: 2px 2px;
+    background-repeat: repeat-x;
+    background-color: transparent;
+  }
+
+  .post-body img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: calc(21 * 1.25rem);
+  }
+
+  .post-body img + img {
+    margin-top: calc(0.5 * 1.25rem);
+  }
+
+  .post-body pre, .post-body code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'source-code-pro', consolas, menlo, monospace;
+  }
+</style>
+
+<h1 class="post-title">{{ title }}</h1>
+<div class="post-date">{{ date | readableDate }}</div>
+<div class="post-body">
+  {{ content | safe }}
+</div>

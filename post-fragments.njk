@@ -1,0 +1,11 @@
+---
+pagination:
+  data: collections.posts
+  size: 1
+  alias: post
+permalink: "posts/{{ post.fileSlug }}/content.html"
+eleventyExcludeFromCollections: true
+---
+<h1 class="post-title">{{ post.data.title }}</h1>
+<div class="post-date">{{ post.date | readableDate }}</div>
+<div class="post-body">{{ post.content | safe }}</div>

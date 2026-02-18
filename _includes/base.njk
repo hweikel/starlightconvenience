@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if title %}{{ title }} — {% endif %}Starlight Convenience</title>
+  <style>
+    @font-face {
+      font-family: 'SabonLTPro';
+      src: url('/fonts/SabonLTPro-Roman.eot');
+      src: url('/fonts/SabonLTPro-Roman.eot?#iefix') format('embedded-opentype'),
+           url('/fonts/SabonLTPro-Roman.woff') format('woff'),
+           url('/fonts/SabonLTPro-Roman.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'SabonLTPro';
+      src: url('/fonts/SabonLTPro_Italic.eot');
+      src: url('/fonts/SabonLTPro_Italic.eot?#iefix') format('embedded-opentype'),
+           url('/fonts/SabonLTPro_Italic.woff') format('woff'),
+           url('/fonts/SabonLTPro_Italic.woff2') format('woff2');
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background: #360816;
+      color: #ffef91;
+      font-family: 'SabonLTPro', 'Times New Roman', Georgia, 'Noto Serif KR',
+                   'Noto Serif JP', 'Noto Serif TC', 'Songti TC', 'HiraMinProN',
+                   'Hiragino Mincho ProN', 'Yu Gothic', 'Hiragino Sans GB',
+                   'Heiti TC', serif;
+      font-size: 22px;
+      line-height: 1.25;
+      font-variant-numeric: oldstyle-nums;
+      font-feature-settings: 'onum';
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-size: inherit;
+      font-weight: normal;
+      font-family: inherit;
+    }
+
+    a {
+      color: #ffef91;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    em, i {
+      font-style: italic;
+    }
+
+    strong, b {
+      font-weight: normal;
+    }
+
+    hr {
+      border: none;
+      text-align: center;
+    }
+
+    hr:after {
+      content: "*";
+    }
+
+    .site-header {
+      padding: 1.25rem;
+    }
+
+    .site-title {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
+    .content {
+      max-width: calc(21 * 1.25rem);
+      margin: 0 auto;
+      padding: 1.25rem 1.25rem calc(3 * 1.25rem);
+    }
+
+    @media screen and (max-width: 600px) {
+      html, body {
+        font-size: 18px;
+        line-height: 1.2;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/">Starlight Convenience</a>
+  </header>
+  <main class="content">
+    {{ content | safe }}
+  </main>
+</body>
+</html>

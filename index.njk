@@ -1,0 +1,328 @@
+---
+permalink: /index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starlight Convenience</title>
+  <style>
+    @font-face {
+      font-family: 'SabonLTPro';
+      src: url('/fonts/SabonLTPro-Roman.eot');
+      src: url('/fonts/SabonLTPro-Roman.eot?#iefix') format('embedded-opentype'),
+           url('/fonts/SabonLTPro-Roman.woff') format('woff'),
+           url('/fonts/SabonLTPro-Roman.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'SabonLTPro';
+      src: url('/fonts/SabonLTPro_Italic.eot');
+      src: url('/fonts/SabonLTPro_Italic.eot?#iefix') format('embedded-opentype'),
+           url('/fonts/SabonLTPro_Italic.woff') format('woff'),
+           url('/fonts/SabonLTPro_Italic.woff2') format('woff2');
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: #360816;
+      color: #ffef91;
+      font-family: 'SabonLTPro', 'Times New Roman', Georgia, 'Noto Serif KR',
+                   'Noto Serif JP', 'Noto Serif TC', 'Songti TC', 'HiraMinProN',
+                   'Hiragino Mincho ProN', 'Yu Gothic', 'Hiragino Sans GB',
+                   'Heiti TC', serif;
+      font-size: 22px;
+      line-height: 1.25;
+      font-variant-numeric: oldstyle-nums;
+      font-feature-settings: 'onum';
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-size: inherit;
+      font-weight: normal;
+      font-family: inherit;
+    }
+
+    a {
+      color: #ffef91;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    em, i { font-style: italic; }
+    strong, b { font-weight: normal; }
+
+    hr { border: none; text-align: center; }
+    hr:after { content: "*"; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 25vw 1fr;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+    }
+
+    .cell-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .cell-header img {
+      max-width: 75%;
+      max-height: 75%;
+      object-fit: contain;
+    }
+
+    .site-title {
+      margin-top: 0.625rem;
+      font-feature-settings: "smcp" 1;
+      letter-spacing: 2px;
+      font-size: 1rem;
+    }
+
+    .cell-nav {
+      overflow-y: auto;
+      padding: 1.25rem;
+    }
+
+    .cell-post {
+      grid-row: 1 / -1;
+      grid-column: 2;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 1.25rem 1.25rem calc(3 * 1.25rem);
+    }
+
+    .cell-post::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .nav-list a {
+      display: block;
+      font-feature-settings: "smcp" 1;
+      letter-spacing: 2px;
+    }
+
+    .nav-list .nav-date {
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+
+    .nav-list a.active {
+      text-decoration: underline;
+    }
+
+    .post-title {
+      margin-top: calc(0.75 * 1.25rem);
+      text-align: center;
+      font-feature-settings: "smcp" 1;
+      letter-spacing: 2px;
+    }
+
+    .post-date {
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-top: calc(0.5 * 1.25rem);
+    }
+
+    .post-body {
+      margin-top: 1.25rem;
+    }
+
+    .post-body p,
+    .post-body ul {
+      max-width: calc(21 * 1.25rem);
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .post-body p + p,
+    .post-body ul + p,
+    .post-body p + ul,
+    .post-body ol + p,
+    .post-body p + ol,
+    .post-body p + blockquote,
+    .post-body blockquote + p,
+    .post-body blockquote + blockquote,
+    .post-body li + li {
+      margin-top: calc(0.5 * 1.25rem);
+    }
+
+    .post-body blockquote { margin: 0; }
+
+    .post-body blockquote p {
+      padding-left: 1.25rem;
+      max-width: calc(21 * 1.25rem - 1.25rem);
+    }
+
+    .post-body ul {
+      list-style-type: none;
+      padding-left: 2rem;
+    }
+
+    .post-body ol {
+      list-style-type: none;
+      counter-reset: list;
+      max-width: calc(21 * 1.25rem);
+      margin-right: auto;
+      margin-left: auto;
+      padding-left: 1.25rem;
+    }
+
+    .post-body li {
+      position: relative;
+    }
+
+    .post-body ol > li:before {
+      position: absolute;
+      counter-increment: list;
+      content: counter(list);
+      margin-left: -1.25rem;
+    }
+
+    .post-body ul > li:before {
+      position: absolute;
+      content: '\00B7';
+      margin-left: -1rem;
+    }
+
+    .post-body a:link,
+    .post-body a:visited {
+      background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-position: 0px 92%;
+      background-size: 2px 2px;
+      background-repeat: repeat-x;
+      background-color: transparent;
+    }
+
+    .post-body img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    .post-body img + img {
+      margin-top: calc(0.5 * 1.25rem);
+    }
+
+    .post-body pre, .post-body code {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'source-code-pro', consolas, menlo, monospace;
+    }
+
+    @media screen and (max-width: 600px) {
+      html, body {
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .cell-post {
+        grid-row: auto;
+        grid-column: auto;
+      }
+
+      .cell-nav {
+        order: 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <div class="cell-header">
+      <img src="/white-diamond.jpg" alt="">
+      <div class="site-title">Starlight Convenience</div>
+    </div>
+    <nav class="cell-nav">
+      <ul class="nav-list">
+        {%- for post in collections.posts %}
+        <li>
+          <a href="#{{ post.fileSlug }}" data-slug="{{ post.fileSlug }}">
+            {{ post.data.title }}
+            <span class="nav-date">{{ post.date | readableDate }}</span>
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </nav>
+    <div class="cell-post" id="post-content">
+    </div>
+  </div>
+
+  <script>
+    var cache = {};
+    var defaultSlug = '{{ collections.posts[0].fileSlug }}';
+
+    function loadPost(slug) {
+      if (!slug) slug = defaultSlug;
+      var el = document.getElementById('post-content');
+
+      if (cache[slug]) {
+        el.innerHTML = cache[slug];
+        el.scrollTop = 0;
+        updateActive(slug);
+        return;
+      }
+
+      fetch('/posts/' + slug + '/content.html')
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          cache[slug] = html;
+          el.innerHTML = html;
+          el.scrollTop = 0;
+          updateActive(slug);
+        });
+    }
+
+    function updateActive(slug) {
+      var links = document.querySelectorAll('.nav-list a');
+      for (var i = 0; i < links.length; i++) {
+        links[i].classList.toggle('active', links[i].dataset.slug === slug);
+      }
+    }
+
+    function onHash() {
+      var slug = location.hash.slice(1);
+      loadPost(slug || defaultSlug);
+    }
+
+    window.addEventListener('hashchange', onHash);
+    onHash();
+  </script>
+</body>
+</html>
