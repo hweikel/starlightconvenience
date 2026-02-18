@@ -7,20 +7,20 @@
   <style>
     @font-face {
       font-family: 'SabonLTPro';
-      src: url('/fonts/SabonLTPro-Roman.eot');
-      src: url('/fonts/SabonLTPro-Roman.eot?#iefix') format('embedded-opentype'),
-           url('/fonts/SabonLTPro-Roman.woff') format('woff'),
-           url('/fonts/SabonLTPro-Roman.woff2') format('woff2');
+      src: url('{{ "/fonts/SabonLTPro-Roman.eot" | url }}');
+      src: url('{{ "/fonts/SabonLTPro-Roman.eot?#iefix" | url }}') format('embedded-opentype'),
+           url('{{ "/fonts/SabonLTPro-Roman.woff" | url }}') format('woff'),
+           url('{{ "/fonts/SabonLTPro-Roman.woff2" | url }}') format('woff2');
       font-weight: 400;
       font-style: normal;
     }
 
     @font-face {
       font-family: 'SabonLTPro';
-      src: url('/fonts/SabonLTPro_Italic.eot');
-      src: url('/fonts/SabonLTPro_Italic.eot?#iefix') format('embedded-opentype'),
-           url('/fonts/SabonLTPro_Italic.woff') format('woff'),
-           url('/fonts/SabonLTPro_Italic.woff2') format('woff2');
+      src: url('{{ "/fonts/SabonLTPro_Italic.eot" | url }}');
+      src: url('{{ "/fonts/SabonLTPro_Italic.eot?#iefix" | url }}') format('embedded-opentype'),
+           url('{{ "/fonts/SabonLTPro_Italic.woff" | url }}') format('woff'),
+           url('{{ "/fonts/SabonLTPro_Italic.woff2" | url }}') format('woff2');
       font-weight: 400;
       font-style: italic;
     }
@@ -102,7 +102,7 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="site-title" href="/">Starlight Convenience</a>
+    <a class="site-title" href="{{ '/' | url }}">Starlight Convenience</a>
   </header>
   <main class="content">
     {{ content | safe }}

@@ -18,6 +18,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("white-diamond.jpg");
 
   return {
+    pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/",
     dir: {
       input: ".",
       includes: "_includes",

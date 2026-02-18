@@ -11,20 +11,20 @@ eleventyExcludeFromCollections: true
   <style>
     @font-face {
       font-family: 'SabonLTPro';
-      src: url('/fonts/SabonLTPro-Roman.eot');
-      src: url('/fonts/SabonLTPro-Roman.eot?#iefix') format('embedded-opentype'),
-           url('/fonts/SabonLTPro-Roman.woff') format('woff'),
-           url('/fonts/SabonLTPro-Roman.woff2') format('woff2');
+      src: url('{{ "/fonts/SabonLTPro-Roman.eot" | url }}');
+      src: url('{{ "/fonts/SabonLTPro-Roman.eot?#iefix" | url }}') format('embedded-opentype'),
+           url('{{ "/fonts/SabonLTPro-Roman.woff" | url }}') format('woff'),
+           url('{{ "/fonts/SabonLTPro-Roman.woff2" | url }}') format('woff2');
       font-weight: 400;
       font-style: normal;
     }
 
     @font-face {
       font-family: 'SabonLTPro';
-      src: url('/fonts/SabonLTPro_Italic.eot');
-      src: url('/fonts/SabonLTPro_Italic.eot?#iefix') format('embedded-opentype'),
-           url('/fonts/SabonLTPro_Italic.woff') format('woff'),
-           url('/fonts/SabonLTPro_Italic.woff2') format('woff2');
+      src: url('{{ "/fonts/SabonLTPro_Italic.eot" | url }}');
+      src: url('{{ "/fonts/SabonLTPro_Italic.eot?#iefix" | url }}') format('embedded-opentype'),
+           url('{{ "/fonts/SabonLTPro_Italic.woff" | url }}') format('woff'),
+           url('{{ "/fonts/SabonLTPro_Italic.woff2" | url }}') format('woff2');
       font-weight: 400;
       font-style: italic;
     }
@@ -265,7 +265,7 @@ eleventyExcludeFromCollections: true
 <body>
   <div class="grid">
     <div class="cell-header">
-      <img src="/white-diamond.jpg" alt="">
+      <img src="{{ '/white-diamond.jpg' | url }}" alt="">
       <div class="site-title">Starlight Convenience</div>
     </div>
     <nav class="cell-nav">
@@ -286,6 +286,7 @@ eleventyExcludeFromCollections: true
 
   <script>
     var cache = {};
+    var basePath = '{{ "/posts/" | url }}';
     var defaultSlug = '{{ collections.posts[0].fileSlug }}';
 
     function loadPost(slug) {
@@ -299,7 +300,7 @@ eleventyExcludeFromCollections: true
         return;
       }
 
-      fetch('/posts/' + slug + '/content.html')
+      fetch(basePath + slug + '/content.html')
         .then(function(r) { return r.text(); })
         .then(function(html) {
           cache[slug] = html;
