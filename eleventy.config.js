@@ -16,7 +16,7 @@ module.exports = function (eleventyConfig) {
   const pathPrefix = process.env.ELEVENTY_PATH_PREFIX || "/";
   eleventyConfig.addTransform("prefix-img-src", function (content, outputPath) {
     if (outputPath && outputPath.endsWith(".html") && pathPrefix !== "/") {
-      return content.replace(/(<img[^>]+src=")\/(?!\/)/g, `$1${pathPrefix}`);
+      return content.replace(/(<img[^>]+src=")(\/assets\/)/g, `$1${pathPrefix}assets/`);
     }
     return content;
   });
