@@ -13,6 +13,14 @@ module.exports = function (eleventyConfig) {
     return y + " \u00B7 " + m + " \u00B7 " + day;
   });
 
+  const pathPrefix = process.env.ELEVENTY_PATH_PREFIX || "/";
+  eleventyConfig.addTransform("prefix-img-src", function (content, outputPath) {
+    if (outputPath && outputPath.endsWith(".html") && pathPrefix !== "/") {
+      return content.replace(/(<img[^>]+src=")\/(?!\/)/g, `$1${pathPrefix}`);
+    }
+    return content;
+  });
+
   eleventyConfig.addWatchTarget("posts/");
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("white-diamond.jpg");
