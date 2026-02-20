@@ -9,12 +9,17 @@ eleventyExcludeFromCollections: true
   <link href="https://hweikel.github.io/starlightconvenience/feed.xml" rel="self"/>
   <id>https://hweikel.github.io/starlightconvenience/</id>
   <updated>{{ collections.posts[0].date | isoDate }}</updated>
+  <author>
+    <name>Starlight Convenience</name>
+    <email>antimatter888@gmail.com</email>
+  </author>
   {%- for post in collections.posts %}
   <entry>
     <title>{{ post.data.title }}</title>
     <link href="https://hweikel.github.io/starlightconvenience/#{{ post.fileSlug }}"/>
     <id>https://hweikel.github.io/starlightconvenience/#{{ post.fileSlug }}</id>
     <updated>{{ post.date | isoDate }}</updated>
+    <summary>{{ post.data.title }}</summary>
   </entry>
   {%- endfor %}
 </feed>
