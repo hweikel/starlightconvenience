@@ -8,6 +8,7 @@ eleventyExcludeFromCollections: true
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Starlight Convenience</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%232f73f7'>✴</text></svg>">
   <style>
     @font-face {
       font-family: 'SabonLTPro';
@@ -73,7 +74,7 @@ eleventyExcludeFromCollections: true
     .grid {
       display: grid;
       grid-template-columns: max(18rem, 25vw) 1fr;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: auto 1fr auto;
       height: 100vh;
       border: 1px solid #2f73f7;
       gap: 1px;
@@ -111,6 +112,18 @@ eleventyExcludeFromCollections: true
       overflow-y: auto;
       padding: 1.25rem;
       background: #360816;
+    }
+
+    .cell-links {
+      padding: 1.25rem;
+      background: #360816;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255, 239, 145, 0.6);
+      font-feature-settings: "smcp" 1, "c2sc" 1;
+      letter-spacing: 2px;
     }
 
     .cell-post {
@@ -263,7 +276,6 @@ eleventyExcludeFromCollections: true
 
       .grid {
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
         height: auto;
         min-height: 100vh;
       }
@@ -271,10 +283,7 @@ eleventyExcludeFromCollections: true
       .cell-post {
         grid-row: auto;
         grid-column: auto;
-      }
-
-      .cell-post {
-        order: 3;
+        order: 4;
       }
     }
   </style>
@@ -297,6 +306,10 @@ eleventyExcludeFromCollections: true
         {%- endfor %}
       </ul>
     </nav>
+    <div class="cell-links">
+      <a href="{{ '/feed.xml' | url }}">RSS</a>
+      <a href="mailto:antimatter888@gmail.com">antimatter888@gmail.com</a>
+    </div>
     <div class="cell-post" id="post-content">
     </div>
   </div>

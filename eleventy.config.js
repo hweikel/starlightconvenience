@@ -5,6 +5,10 @@ module.exports = function (eleventyConfig) {
     });
   });
 
+  eleventyConfig.addFilter("isoDate", function (date) {
+    return new Date(date).toISOString();
+  });
+
   eleventyConfig.addFilter("readableDate", function (date) {
     var d = new Date(date);
     var y = d.getFullYear();

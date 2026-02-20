@@ -10,7 +10,7 @@ For the first two years of his PhD in Basel, Ortiz lived on the only bad street 
 
 The other residents of Efringerstrasse seemed aware of the activity but completely undisturbed by it. While the Svenoids snarled and scrabbled in the street, or dragged in stolen bikes and threw themselves in desperation against Sven’s locked door, a young Swiss couple would eat pasta silently and then lie awake in bed for hours, staring immobile into one another’s eyes, their drapes wide open. Ortiz’s girlfriend, a cat-eyed Connecticut psychologist, guiltily proffered a pair of binoculars and we all fell into an electrified focus.
 
-These scattered notes, the torn scraps of a once-lively group chat on Telegram, are the only record of Sven's cruel reign that I managed to save. As someone commented, it always felt like Ortiz was born to watch the hangman's door.
+These scattered notes from Ortiz's once-lively group chat on Telegram are the only record of Sven's cruel reign that I managed to save. As someone commented, it always felt like Ortiz was born to watch the hangman's door.
 
 ---
 
