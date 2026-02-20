@@ -16,6 +16,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addWatchTarget("posts/");
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("white-diamond.jpg");
+  eleventyConfig.addPassthroughCopy("assets");
 
   return {
     pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/",

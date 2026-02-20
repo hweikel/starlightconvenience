@@ -1,5 +1,5 @@
 ---
-title: "Bare backs and black trousers"
+title: "Bare backs & black trousers"
 date: 2017-10-20
 tags: fiction
 previewImage: ""

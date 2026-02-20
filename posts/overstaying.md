@@ -8,6 +8,7 @@ layout: post.njk
 A few months after graduation there was an issue with my visa. I didn’t understand the problem and judging from their letters neither did the Home Office. All the same, the letters came with startling regularity, urging a level of diligence with paperwork that was beyond me. When the word “deportation” finally appeared beneath the envelope’s little plastic window, I felt an incredible sense of relief. It gave me an excuse to put into action a plan that I had been considering since I first arrived in London. After saying farewell to a few acquaintances in the City, I abandoned my rented room, sold all of my possessions, and moved into the Barbican.
 
 I want this account to avoid romanticism, although I will admit that I have loved the Barbican from the moment I saw it. In the email she sent to dump me, an ex-girlfriend listed “imprecision” first among my many flaws (though to call those two cold months in Vancouver a relationship is itself an imprecision bordering on the magical). So, in an effort to now be as precise as possible, I should pause to explain two aspects of my decision and their implications for the rest of this story.
+
 First, I want to specify those items I retained, the exact contents of my backpack (a 20-liter Klättermusen Ull) faithfully captured in the packing list I made the night before my departure:
 - Petzl headlamp and charger
 - Katabatic Gear “Alsek” down quilt
@@ -17,6 +18,7 @@ First, I want to specify those items I retained, the exact contents of my backpa
 - Lloyd’s debit card (international student edition)
 
 On me, I had another pair of long underwear, Teva sandals, and a Casio F-91W watch. I also kept my expired Biometric Residence Permit, although this was quickly placed in a plastic sandwich bag, weighed down with stones, and stored securely on the concrete floor of the Barbican Lake.
+
 Second, I want to emphasize that I only “moved” to the Barbican in a strictly physical sense. There was no communication with a prospective landlord, no hand-wringing over south-facing windows, and certainly no credit check – something which I would have had no hope of passing. In fact, it took me more than a quarter of a century to realize that “moving” somewhere was much more about intention and proclamation than these sorts of administrative details. 
 
 Having sold my bike, I simply walked in—and since the moment I crossed over the southern threshold, I have not set foot outside these grounds.
