@@ -5,9 +5,9 @@ eleventyExcludeFromCollections: true
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Starlight Convenience</title>
-  <link href="https://hweikel.github.io/starlightconvenience/" rel="alternate"/>
-  <link href="https://hweikel.github.io/starlightconvenience/feed.xml" rel="self"/>
-  <id>https://hweikel.github.io/starlightconvenience/</id>
+  <link href="https://starlightconvenience.net/" rel="alternate"/>
+  <link href="https://starlightconvenience.net/feed.xml" rel="self"/>
+  <id>https://starlightconvenience.net/</id>
   <updated>{{ collections.posts[0].date | isoDate }}</updated>
   <author>
     <name>Starlight Convenience</name>
@@ -16,8 +16,8 @@ eleventyExcludeFromCollections: true
   {%- for post in collections.posts %}
   <entry>
     <title>{{ post.data.title }}</title>
-    <link href="https://hweikel.github.io/starlightconvenience/#{{ post.fileSlug }}"/>
-    <id>https://hweikel.github.io/starlightconvenience/#{{ post.fileSlug }}</id>
+    <link href="https://starlightconvenience.net/#{{ post.fileSlug }}"/>
+    <id>https://starlightconvenience.net/#{{ post.fileSlug }}</id>
     <updated>{{ post.date | isoDate }}</updated>
     <summary>{{ post.data.title }}</summary>
   </entry>
