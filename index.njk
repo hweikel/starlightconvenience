@@ -110,8 +110,22 @@ eleventyExcludeFromCollections: true
 
     .cell-nav {
       overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #2f73f7 transparent;
       padding: 1.25rem;
       background: #360816;
+    }
+
+    .cell-nav::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .cell-nav::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .cell-nav::-webkit-scrollbar-thumb {
+      background: #2f73f7;
     }
 
     .cell-links {
@@ -130,13 +144,22 @@ eleventyExcludeFromCollections: true
       grid-row: 1 / -1;
       grid-column: 2;
       overflow-y: auto;
-      scrollbar-width: none;
+      scrollbar-width: thin;
+      scrollbar-color: #2f73f7 transparent;
       padding: 1.25rem 1.25rem calc(3 * 1.25rem);
       background: #360816;
     }
 
     .cell-post::-webkit-scrollbar {
-      display: none;
+      width: 4px;
+    }
+
+    .cell-post::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .cell-post::-webkit-scrollbar-thumb {
+      background: #2f73f7;
     }
 
     .nav-list {
@@ -188,7 +211,7 @@ eleventyExcludeFromCollections: true
 
     .post-body p,
     .post-body ul {
-      max-width: calc(21 * 1.25rem);
+      max-width: calc(26 * 1.25rem);
       margin-right: auto;
       margin-left: auto;
     }
@@ -209,7 +232,7 @@ eleventyExcludeFromCollections: true
 
     .post-body blockquote p {
       padding-left: 1.25rem;
-      max-width: calc(21 * 1.25rem - 1.25rem);
+      max-width: calc(26 * 1.25rem - 1.25rem);
     }
 
     .post-body ul {
@@ -220,7 +243,7 @@ eleventyExcludeFromCollections: true
     .post-body ol {
       list-style-type: none;
       counter-reset: list;
-      max-width: calc(21 * 1.25rem);
+      max-width: calc(26 * 1.25rem);
       margin-right: auto;
       margin-left: auto;
       padding-left: 1.25rem;
@@ -306,7 +329,7 @@ eleventyExcludeFromCollections: true
       <ul class="nav-list">
         {%- for post in collections.posts %}
         <li>
-          <a href="#{{ post.fileSlug }}" data-slug="{{ post.fileSlug }}">
+          <a href="{{ ('/posts/' + post.fileSlug + '/') | url }}" data-slug="{{ post.fileSlug }}"{% if loop.first %} class="active"{% endif %}>
             <span class="nav-title">{{ post.data.title }}</span>
             <span class="nav-date">{{ post.date | readableDate }}</span>
           </a>
@@ -318,50 +341,49 @@ eleventyExcludeFromCollections: true
       <a href="{{ '/feed.xml' | url }}">RSS</a>
       <a href="https://www.henryweikel.net/">henryweikel.net</a>
     </div>
-    <div class="cell-post" id="post-content">
-    </div>
+    <article class="cell-post" id="post-content">
+      <h1 class="post-title">{{ collections.posts[0].data.title }}</h1>
+      <div class="post-date">{{ collections.posts[0].date | readableDate }}</div>
+      <div class="post-body">{{ collections.posts[0].content | safe }}</div>
+    </article>
   </div>
 
   <script>
     var cache = {};
     var basePath = '{{ "/posts/" | url }}';
-    var defaultSlug = '{{ collections.posts[0].fileSlug }}';
+    var activeSlug = '{{ collections.posts[0].fileSlug }}';
 
-    function loadPost(slug) {
-      if (!slug) slug = defaultSlug;
+    cache[activeSlug] = document.getElementById('post-content').innerHTML;
+
+    function loadPost(slug, push) {
       var el = document.getElementById('post-content');
-
-      if (cache[slug]) {
-        el.innerHTML = cache[slug];
-        el.scrollTop = 0;
-        updateActive(slug);
-        return;
-      }
-
+      if (push) history.pushState({slug: slug}, '', basePath + slug + '/');
+      updateActive(slug);
+      if (cache[slug]) { el.innerHTML = cache[slug]; el.scrollTop = 0; return; }
       fetch(basePath + slug + '/content.html')
         .then(function(r) { return r.text(); })
-        .then(function(html) {
-          cache[slug] = html;
-          el.innerHTML = html;
-          el.scrollTop = 0;
-          updateActive(slug);
-        });
+        .then(function(html) { cache[slug] = html; el.innerHTML = html; el.scrollTop = 0; });
     }
 
     function updateActive(slug) {
       var links = document.querySelectorAll('.nav-list a');
-      for (var i = 0; i < links.length; i++) {
+      for (var i = 0; i < links.length; i++)
         links[i].classList.toggle('active', links[i].dataset.slug === slug);
-      }
     }
 
-    function onHash() {
-      var slug = location.hash.slice(1);
-      loadPost(slug || defaultSlug);
+    var navLinks = document.querySelectorAll('.nav-list a');
+    for (var i = 0; i < navLinks.length; i++) {
+      navLinks[i].addEventListener('click', (function(link) {
+        return function(e) { e.preventDefault(); loadPost(link.dataset.slug, true); };
+      })(navLinks[i]));
     }
 
-    window.addEventListener('hashchange', onHash);
-    onHash();
+    window.addEventListener('popstate', function(e) {
+      var slug = (e.state && e.state.slug) || activeSlug;
+      loadPost(slug, false);
+    });
+
+    history.replaceState({slug: activeSlug}, '', location.href);
   </script>
 </body>
 </html>
