@@ -26,6 +26,7 @@ module.exports = function (eleventyConfig) {
   });
 
   eleventyConfig.addWatchTarget("posts/");
+  eleventyConfig.addWatchTarget("_includes/");
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("white-diamond.jpg");
   eleventyConfig.addPassthroughCopy("assets");

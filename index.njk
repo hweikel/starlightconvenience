@@ -58,11 +58,11 @@ eleventyExcludeFromCollections: true
 
     a {
       color: #ffef91;
-      text-decoration: none;
+      text-decoration: underline;
     }
 
-    a:hover {
-      text-decoration: underline;
+    a:hover, a:focus {
+      color: #2f73f7;
     }
 
     em, i { font-style: italic; }
@@ -283,6 +283,10 @@ eleventyExcludeFromCollections: true
 
     .post-body img + img {
       margin-top: calc(0.5 * 1.25rem);
+    }
+
+    .post-body img[src$="dancing_star_mark_1.svg"] {
+      width: calc(26 * 1.25rem * 0.2);
     }
 
     .post-body pre, .post-body code {
