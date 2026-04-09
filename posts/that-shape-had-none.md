@@ -6,7 +6,7 @@ previewImage: ""
 layout: post.njk
 ---
 > ... The other shape,  
-> If shape it might be call'd that shape had none
+> If shape it might be call'd that shape had none  
 > (Paradise Lost, Book II: 666-667)
 
 The collections were managed by Lorna, a tiny freckled woman who kept tilting her head to look at my call slips from new angles and laughing quietly at something she saw there. After nearly three days together in the artificial intimacy of the reading room, a chasm remained between us. I saw too much of my own complacency in how she presided over the treasures of a declining institution, and I knew she in turn saw in my archival work a tawdry ambition she had long since stifled. All the same I was at her mercy, and having gathered enough for at least one conference paper, I had viewed everything of interest with an entire afternoon to spare.

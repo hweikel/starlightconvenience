@@ -7,7 +7,7 @@ layout: post.njk
 ---
 Dreams haunted by this scene from *Anne*, Paal Helge-Haugen’s 1968 *punktroman*: a novel composed of ”points.” Translation mine.
 
->32
+>32  
 >In a cove, four men with bare backs  
 >and black trousers crouch in the sand.  
 >I see a white body in the water. His arms,  

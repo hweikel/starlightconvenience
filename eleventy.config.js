@@ -1,8 +1,8 @@
 module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("posts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("posts/**/*.md").sort((a, b) => {
-      return b.date - a.date;
-    });
+    return collectionApi.getFilteredByGlob("posts/**/*.md")
+      .filter((item) => !item.data.eleventyExcludeFromCollections)
+      .sort((a, b) => b.date - a.date);
   });
 
   eleventyConfig.addFilter("isoDate", function (date) {

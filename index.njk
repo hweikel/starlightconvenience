@@ -179,6 +179,7 @@ eleventyExcludeFromCollections: true
 
     .nav-list a:hover {
       text-decoration: none;
+      color: #ffef91;
     }
 
     .nav-list .nav-date {
@@ -268,11 +269,22 @@ eleventyExcludeFromCollections: true
 
     .post-body a:link,
     .post-body a:visited {
-      background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.25) 50%);
-      background-position: 0px 92%;
-      background-size: 2px 2px;
-      background-repeat: repeat-x;
-      background-color: transparent;
+      background: none;
+    }
+
+    .post-nav {
+      display: flex;
+      max-width: calc(26 * 1.25rem);
+      margin: calc(1.5 * 1.25rem) auto 0;
+      font-size: 1.5rem;
+    }
+
+    .post-nav a {
+      text-decoration: none;
+    }
+
+    .post-nav-next {
+      margin-left: auto;
     }
 
     .post-body img {
@@ -285,8 +297,23 @@ eleventyExcludeFromCollections: true
       margin-top: calc(0.5 * 1.25rem);
     }
 
-    .post-body img[src$="dancing_star_mark_1.svg"] {
+    .post-body img[src$="dancing_star_mark_1.svg"],
+    .post-body img[src$="dsp1.svg"],
+    .post-body img[src$="dsp2.svg"] {
       width: calc(26 * 1.25rem * 0.2);
+    }
+
+    .mark-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      margin-bottom: calc(0.5 * 1.25rem);
+    }
+
+    .mark-row img {
+      display: block;
+      margin: 0;
     }
 
     .post-body pre, .post-body code {
@@ -359,14 +386,34 @@ eleventyExcludeFromCollections: true
 
     cache[activeSlug] = document.getElementById('post-content').innerHTML;
 
+    function updatePostNav(slug) {
+      var allLinks = document.querySelectorAll('.nav-list a');
+      var slugs = Array.prototype.map.call(allLinks, function(l) { return l.dataset.slug; });
+      var idx = slugs.indexOf(slug);
+      var html = '<div class="post-nav">';
+      if (idx < slugs.length - 1) {
+        html += '<a href="#" class="post-nav-prev" data-slug="' + slugs[idx + 1] + '">\u21DC\uFE0E</a>';
+      }
+      if (idx > 0) {
+        html += '<a href="#" class="post-nav-next" data-slug="' + slugs[idx - 1] + '">\u21DD\uFE0E</a>';
+      }
+      html += '</div>';
+      var el = document.getElementById('post-content');
+      el.insertAdjacentHTML('beforeend', html);
+      var prev = el.querySelector('.post-nav-prev');
+      var next = el.querySelector('.post-nav-next');
+      if (prev) prev.addEventListener('click', function(e) { e.preventDefault(); loadPost(this.dataset.slug, true); });
+      if (next) next.addEventListener('click', function(e) { e.preventDefault(); loadPost(this.dataset.slug, true); });
+    }
+
     function loadPost(slug, push) {
       var el = document.getElementById('post-content');
       if (push) history.pushState({slug: slug}, '', basePath + slug + '/');
       updateActive(slug);
-      if (cache[slug]) { el.innerHTML = cache[slug]; el.scrollTop = 0; return; }
+      if (cache[slug]) { el.innerHTML = cache[slug]; el.scrollTop = 0; updatePostNav(slug); return; }
       fetch(basePath + slug + '/content.html')
         .then(function(r) { return r.text(); })
-        .then(function(html) { cache[slug] = html; el.innerHTML = html; el.scrollTop = 0; });
+        .then(function(html) { cache[slug] = html; el.innerHTML = html; el.scrollTop = 0; updatePostNav(slug); });
     }
 
     function updateActive(slug) {
@@ -388,6 +435,7 @@ eleventyExcludeFromCollections: true
     });
 
     history.replaceState({slug: activeSlug}, '', location.href);
+    updatePostNav(activeSlug);
   </script>
 </body>
 </html>
