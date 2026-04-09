@@ -54,7 +54,7 @@ I called friends and asked them what made physical books ecstatic objects. We sp
 ![](/assets/images/kawade.png)
 ![](/assets/images/bunkobon.jpg)
 ![](/assets/images/minuit.jpg)
-![](/assets/images/minuit2.png)
+![](/assets/images/minuit2.jpg)
 
 Above all, I was drawn by the unique relation offered by these presses' work to other peoples' writing, making them less critics or editors than scavengers, gamblers, boosters: conduits and partisans of the new. I realized a press could be an offering on the twin altars of lightness and ecstasy. Nietzsche and Calvino's lightness that sends the soul up dancing past the rafters; the physical lightness of small books. Lightness as a form of sovereignty - the life you make for yourself in private that's free of so many things. A series of physically small books, then, light in all ways. Books that looked good on a shelf but invited energetic reading on the move. And then a hint of [the darker ecstasy of Tom Waits](https://youtu.be/04qPdGNA_KM), of intensely private modes of writing, any work so personal that it pierces only rarely through its own illegibility, with brief flashes of energy and meaning. Scavenging in the public domain seemed exactly the right way to start, the lightest first step away from the dour maturity of much literary fiction - which deals too readily in concepts and questions, making it hard to either criticize or enjoy - and toward a different fiction, one of ecstatic best guesses & fractious half-answers.
 
@@ -63,7 +63,7 @@ Above all, I was drawn by the unique relation offered by these presses' work to 
 My friend [Lauren](https://laurengraycar.com/about/) indulged all these thoughts and [distilled them](https://laurengraycar.com/dsp/) into a mark and typographic system for the series. [William](https://williampan.net/) made us [a website](https://dancingstar.press/about/). I found an [affordable printer](https://www.tjbooks.co.uk/) in Cornwall by checking the colophons of a few other small presses. At every stage, this taped-together rig offered immense freedom. When the manuscript proved too long, there was no pressure to cut stories; Lauren and I simply bumped up the dimensions last minute, still nearer our goal of A6 than a standard US "trade" format. When a few boxes of the first order faced minor water damage in transit, I was able to [sell them for a reduced rate](https://buy.stripe.com/9B68wOca8eMZfqb4i0b7y04) - something a distributor would never have allowed.
 
 ![](/assets/images/DSP1CoverSpread.jpg)
-![](/assets/images/DSP1SpineRow2.png)
+![](/assets/images/DSP1SpineRow2.jpg)
 ![](/assets/images/DSP1CoverSpine.jpg)
 
 Although I'd dreaded the idea of selling something, talking to small bookstores turned out to be a highlight. The day I received the first batch, I sent short emails to a dozen of them and was surprised when most responded with orders. We engaged in basically no other online promotion. Wherever I travel now, I email any local bookstores in advance, then drop off their order when I'm in town. Being ushered into a back door of Shakespeare & Co in Paris, past a dawn crowd of tourists lined up ferocious with desire, was a more surreal and moving experience than I expected.
