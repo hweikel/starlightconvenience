@@ -4,7 +4,6 @@ date: 2026-04-09
 tags: projects
 previewImage: ""
 layout: post.njk
-eleventyExcludeFromCollections: true
 ---
 How many ways are there to relate to a piece of writing you care about? 
 
