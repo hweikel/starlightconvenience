@@ -17,6 +17,21 @@ module.exports = function (eleventyConfig) {
     return y + " \u00B7 " + m + " \u00B7 " + day;
   });
 
+  eleventyConfig.amendLibrary("md", function (md) {
+    var defaultRender = md.renderer.rules.link_open ||
+      function (tokens, idx, options, env, self) {
+        return self.renderToken(tokens, idx, options);
+      };
+    md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+      var href = tokens[idx].attrGet("href") || "";
+      if (/^https?:\/\//.test(href)) {
+        tokens[idx].attrSet("target", "_blank");
+        tokens[idx].attrSet("rel", "noopener");
+      }
+      return defaultRender(tokens, idx, options, env, self);
+    };
+  });
+
   const pathPrefix = process.env.ELEVENTY_PATH_PREFIX || "/";
   eleventyConfig.addTransform("prefix-img-src", function (content, outputPath) {
     if (outputPath && outputPath.endsWith(".html") && pathPrefix !== "/") {
