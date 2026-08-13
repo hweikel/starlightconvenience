@@ -1,0 +1,107 @@
+@font-face {
+  font-family: 'SabonLTPro';
+  src: url('/fonts/SabonLTPro-Roman.eot');
+  src: url('/fonts/SabonLTPro-Roman.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/SabonLTPro-Roman.woff') format('woff'),
+       url('/fonts/SabonLTPro-Roman.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FerroMonoTest';
+  src: url('/fonts/FerroMonoTest-RegularI.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100%;
+  background: #000f2d;
+  color: #fff;
+  font-family: 'SabonLTPro', 'Times New Roman', Georgia, serif;
+}
+
+a {
+  color: inherit;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-auto-rows: 300px;
+  gap: 0.5px;
+  background: #000f2d;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #000f2d;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  padding: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0 0 0.5px #ffef91;
+}
+
+.cell[data-span="2x1"] { grid-column: span 2; }
+.cell[data-span="1x2"] { grid-row: span 2; }
+.cell[data-span="2x2"] { grid-column: span 2; grid-row: span 2; }
+
+.cell-img {
+  display: block;
+  max-width: 75%;
+  max-height: 75%;
+  object-fit: contain;
+}
+
+.cell-title {
+  font-family: 'FerroMonoTest', 'SabonLTPro', 'Times New Roman', Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  letter-spacing: 2px;
+  color: #ffef91;
+}
+
+.cell-text {
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.cell-notes {
+  background: #360816;
+}
+
+.cell-shoreleave {
+  background: #000000;
+}
+
+.cell-pin {
+  background: #000f2d;
+}
+
+.cell-pin .cell-title {
+  font-size: 1.5rem;
+}
+
+.cell-pin.cell-blank {
+  background: #000f2d;
+}
+
+@media screen and (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-auto-rows: 210px;
+  }
+}

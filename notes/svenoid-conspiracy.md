@@ -3,7 +3,7 @@ title: "The Svenoid Conspiracy"
 date: 2024-06-21
 tags: fiction
 previewImage: ""
-layout: post.njk
+layout: note.njk
 ---
 
 For the first two years of his PhD in Basel, Ortiz lived on the only bad street in Switzerland. His apartment was a narrow white box on the third floor with two little vestibules for the entryway and kitchen. The light offered by the one wall of glass made it feel like we were figures inside a cramped diorama. We would sit for hours on the balcony looking down at the door of a traphouse, a drooping tenement with a heavy metal door that swung through the night. Ortiz called the house’s patrons Svenoids, named for their habit of approaching and shouting up to an open window "Sven—Sven!" until they were let in to complete whatever fetid task awaited them. They were natural clowns, prowling around the road as if engaged in some secret errand and yet immediately identifiable by their stilted gait. They moved like a bad animation, spoke only in stage whispers, high whistles, and barks. Whenever two or more convened, they would fall into long Shakespearean disputes until the scene reached some height of dramatic intensity, and then I would yell out "Kokain!" in the voice of a Turkish market vendor or toss down torn pieces of pretzel, causing them to fall on one another in a rage.

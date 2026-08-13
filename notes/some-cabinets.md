@@ -2,7 +2,7 @@
 title: "some cabinets"
 date: 2026-07-24
 previewImage: ""
-layout: post.njk
+layout: note.njk
 ---
 ![](/assets/images/seattle-puppet-cabinet.jpg)
 

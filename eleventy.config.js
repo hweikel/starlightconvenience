@@ -1,6 +1,8 @@
 module.exports = function (eleventyConfig) {
-  eleventyConfig.addCollection("posts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("posts/**/*.md")
+  eleventyConfig.ignores.add("README.md");
+
+  eleventyConfig.addCollection("notes", function (collectionApi) {
+    return collectionApi.getFilteredByGlob("notes/**/*.md")
       .filter((item) => !item.data.eleventyExcludeFromCollections)
       .sort((a, b) => b.date - a.date);
   });
@@ -40,12 +42,19 @@ module.exports = function (eleventyConfig) {
     return content;
   });
 
-  eleventyConfig.addWatchTarget("posts/");
+  eleventyConfig.addWatchTarget("notes/");
   eleventyConfig.addWatchTarget("_includes/");
+  eleventyConfig.addWatchTarget("_data/");
+  eleventyConfig.addWatchTarget("js/");
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("white-diamond.jpg");
   eleventyConfig.addPassthroughCopy("assets");
   eleventyConfig.addPassthroughCopy("CNAME");
+  eleventyConfig.addPassthroughCopy("_data");
+  eleventyConfig.addPassthroughCopy("js");
+  eleventyConfig.addPassthroughCopy("index.html");
+
+  eleventyConfig.setTemplateFormats(["md", "njk"]);
 
   return {
     pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/",

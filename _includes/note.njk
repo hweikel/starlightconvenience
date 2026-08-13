@@ -349,9 +349,9 @@
     </div>
     <nav class="cell-nav">
       <ul class="nav-list">
-        {%- for post in collections.posts %}
+        {%- for post in collections.notes %}
         <li>
-          <a href="{{ ('/posts/' + post.fileSlug + '/') | url }}" data-slug="{{ post.fileSlug }}"{% if post.fileSlug === page.fileSlug %} class="active"{% endif %}>
+          <a href="{{ ('/notes/' + post.fileSlug + '/') | url }}" data-slug="{{ post.fileSlug }}"{% if post.fileSlug === page.fileSlug %} class="active"{% endif %}>
             <span class="nav-title">{{ post.data.title }}</span>
             <span class="nav-date">{{ post.date | readableDate }}</span>
           </a>
@@ -372,7 +372,7 @@
 
   <script>
     var cache = {};
-    var basePath = '{{ "/posts/" | url }}';
+    var basePath = '{{ "/notes/" | url }}';
     var activeSlug = '{{ page.fileSlug }}';
 
     cache[activeSlug] = document.getElementById('post-content').innerHTML;

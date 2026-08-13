@@ -3,7 +3,7 @@ title: "The Strange Creature from the North"
 date: 2018-07-30
 tags: fiction
 previewImage: ""
-layout: post.njk
+layout: note.njk
 ---
 
 A sample translation of the prologue and first chapter of Lars Gustafsson's *The Strange Creature from the North*, completed quickly for a publisher near the end of college. It never went anywhere, and the collection remains out of print & untranslated.
