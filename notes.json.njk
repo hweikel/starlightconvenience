@@ -1,0 +1,9 @@
+---
+permalink: "/notes.json"
+eleventyExcludeFromCollections: true
+---
+[
+{%- for post in collections.notes %}
+  {"slug": {{ post.fileSlug | dump | safe }}, "title": {{ post.data.title | dump | safe }}, "date": {{ post.date | isoDate | dump | safe }}}{% if not loop.last %},{% endif %}
+{%- endfor %}
+]

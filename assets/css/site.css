@@ -9,10 +9,13 @@
 }
 
 @font-face {
-  font-family: 'FerroMonoTest';
-  src: url('/fonts/FerroMonoTest-RegularI.otf') format('opentype');
+  font-family: 'SabonLTPro';
+  src: url('/fonts/SabonLTPro_Italic.eot');
+  src: url('/fonts/SabonLTPro_Italic.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/SabonLTPro_Italic.woff') format('woff'),
+       url('/fonts/SabonLTPro_Italic.woff2') format('woff2');
   font-weight: 400;
-  font-style: normal;
+  font-style: italic;
 }
 
 * {
@@ -21,87 +24,532 @@
   box-sizing: border-box;
 }
 
+/* The page scrolls as one piece: both regions grow to their content and the
+   document carries them, rather than each holding its own scrollbar. */
 html, body {
   min-height: 100%;
-  background: #000f2d;
-  color: #fff;
+  background: #360816;
+  color: #ffef91;
   font-family: 'SabonLTPro', 'Times New Roman', Georgia, serif;
+}
+
+/* `scroll`, not `auto`: layoutRegions() measures clientWidth for the page's
+   right edge, so the scrollbar must exist from the first layout. Appearing
+   later narrows the viewport under an already-sized pane -- which shows up as
+   a horizontal scrollbar. scrollbar-gutter did not hold this. */
+html {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #2f73f7 transparent;
+}
+
+html::-webkit-scrollbar { width: 4px; }
+html::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb { background: #2f73f7; }
+
+/* Anchored top-left rather than centred; letterboxing slack goes to the
+   right and bottom, where the regions absorb it. */
+body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: var(--margin) 0 0 var(--margin);
 }
 
 a {
   color: inherit;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-auto-rows: 300px;
-  gap: 0.5px;
-  background: #000f2d;
+/* Fixed 32x20 (16:10) graph-paper canvas. Scaled uniformly to the largest
+   size that fits the viewport on either axis (same trick as the shelf
+   experiment) so the whole composition scales as one image instead of
+   reflowing -- margins outside it just absorb whatever space is left. */
+:root {
+  /* The canvas's top and left inset -- in effect the room left of the nav
+     column, since both regions bleed past the top one. Comes off both axes
+     twice below, so growing it shrinks the canvas. */
+  --margin: 7.5rem;
+  /* Must stay whole-pixel; see snap() in grid.js. */
+  --line-weight: 1px;
+  /* One pinned size for the nav titles and the post headings, matching
+     .notes-reader's 22px base so a title reads identically in the column and
+     over the post. Fixed rather than scaled off the canvas, so the two can't
+     drift -- the cost is that a title can wrap on a narrow viewport, which
+     layoutNav() absorbs by growing that row. */
+  --title-size: 22px;
+  --title-tracking: 2px;
+  /* The breakpoint's one source of truth -- grid.js reads this back rather
+     than hard-coding the width a second time. See the media query at the
+     foot of this file. */
+  --narrow: 0;
 }
 
-.cell {
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  width: min(calc(100vw - 2 * var(--margin)), calc((100vh - 2 * var(--margin)) * 32 / 20));
+  height: min(calc(100vh - 2 * var(--margin)), calc((100vw - 2 * var(--margin)) * 20 / 32));
+}
+
+/* Every rule is a `line` entry in cells.json, positioned by layout() in
+   grid.js. Below anything with a fill, which is how a nav row breaks the
+   line it crosses. */
+.grid-line {
+  position: absolute;
+  background: #2f73f7;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.grid-line-horizontal { height: var(--line-weight); }
+
+.grid-line-vertical { width: var(--line-weight); }
+
+/* Art anchored on a grid intersection. */
+.point {
+  position: absolute;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+a.point { pointer-events: auto; }
+
+.point-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 900 / 869;
+}
+
+/* ---- notes nav column ---------------------------------------------- */
+
+/* Positioned in pixels by layoutRegions() rather than placed in the grid, so
+   they can run past the letterboxed canvas where no line bounds them. No
+   height of their own: content sets it, and the page scrolls to suit. */
+.notes-nav {
+  position: absolute;
+  z-index: 2;
   display: flex;
   flex-direction: column;
+}
+
+.notes-nav-item {
+  flex: none;
+  min-height: 2.6em;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: #000f2d;
-  color: #fff;
-  text-decoration: none;
+  gap: 0.5em;
   text-align: center;
-  padding: 1rem;
-  overflow: hidden;
-  box-shadow: 0 0 0 0.5px #ffef91;
-}
-
-.cell[data-span="2x1"] { grid-column: span 2; }
-.cell[data-span="1x2"] { grid-row: span 2; }
-.cell[data-span="2x2"] { grid-column: span 2; grid-row: span 2; }
-
-.cell-img {
-  display: block;
-  max-width: 75%;
-  max-height: 75%;
-  object-fit: contain;
-}
-
-.cell-title {
-  font-family: 'FerroMonoTest', 'SabonLTPro', 'Times New Roman', Georgia, serif;
-  font-size: 1.1rem;
-  line-height: 1.3;
-  letter-spacing: 2px;
+  padding: 0.4em 0.8em;
   color: #ffef91;
-}
-
-.cell-text {
-  font-size: 0.85rem;
+  text-decoration: none;
+  font-feature-settings: "smcp" 1, "c2sc" 1;
+  font-size: var(--title-size);
+  letter-spacing: var(--title-tracking);
   line-height: 1.3;
 }
 
-.cell-notes {
+/* Rows carry their own rules rather than sitting between `line`s, so a run
+   can end wherever a floating image interrupts the column. Borders are
+   inside the box, so layoutNav()'s heights hold. The sides double as the
+   column's edges, so every row carries them. The fill is required, not
+   cosmetic: it is what breaks the centre line behind a run. */
+.notes-nav-item {
+  border: var(--line-weight) solid #2f73f7;
+  border-bottom-width: 0;
   background: #360816;
 }
 
-.cell-shoreleave {
-  background: #000000;
+/* Closes a run: the bottom of the column, or the row above a floating
+   image, which has no rules to close it from below. */
+.notes-nav-item.notes-nav-close {
+  border-bottom-width: var(--line-weight);
 }
 
-.cell-pin {
-  background: #000f2d;
+/* The shard's cell. No padding, so `size` is a straight fraction of the
+   column's width. layoutNav() sets the height. */
+.notes-nav-item.notes-nav-square {
+  padding: 0;
+  min-height: 0;
+  /* Art above the label where a cell carries both; a no-op for the ones
+     carrying only art. */
+  flex-direction: column;
 }
 
-.cell-pin .cell-title {
-  font-size: 1.5rem;
+/* Image entries carry no rules and no fill, so the centre line shows behind
+   them and the preview rides it. The square cell keeps the break they open
+   scaling with the canvas. */
+.notes-nav-preview {
+  --head-img-fill: 0.8;
+  border-width: 0;
+  background: none;
 }
 
-.cell-pin.cell-blank {
-  background: #000f2d;
+/* A fraction of the cell, set by `size`. Keeps flex-shrink with min-height
+   cleared so it gives way in a cell shared with a label. */
+.notes-nav-img {
+  display: block;
+  height: calc(var(--head-img-fill, 0.55) * 100%);
+  width: auto;
+  /* The same fraction on both axes, or a landscape preview clamps to the
+     column's full width while a portrait one stays inset. */
+  max-width: calc(var(--head-img-fill, 0.55) * 100%);
+  min-height: 0;
+  object-fit: contain;
 }
 
-@media screen and (max-width: 600px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    grid-auto-rows: 210px;
+.notes-nav-item:hover,
+.notes-nav-item.active {
+  color: #2f73f7;
+}
+
+/* ---- notes reading pane --------------------------------------------- */
+
+.notes-reader {
+  position: absolute;
+  z-index: 2;
+  /* 26 × 1.25 × 22px, the measure the posts have always had. Size in `em`
+     off the 22px base below, never `rem` -- the root here is 16px. */
+  --measure: 715px;
+  padding: 1.25em 1.25em 3.75em;
+  font-family: 'SabonLTPro', 'Times New Roman', Georgia, 'Noto Serif KR',
+               'Noto Serif JP', 'Noto Serif TC', 'Songti TC', 'HiraMinProN',
+               'Hiragino Mincho ProN', 'Yu Gothic', 'Hiragino Sans GB',
+               'Heiti TC', serif;
+  font-size: 22px;
+  line-height: 1.25;
+  font-variant-numeric: oldstyle-nums;
+  font-feature-settings: 'onum';
+}
+
+.notes-reader h1,
+.notes-reader h2,
+.notes-reader h3,
+.notes-reader h4,
+.notes-reader h5,
+.notes-reader h6 {
+  font-size: inherit;
+  font-weight: normal;
+  font-family: inherit;
+}
+
+.notes-reader a {
+  color: #ffef91;
+  text-decoration: underline;
+}
+
+.notes-reader a:hover,
+.notes-reader a:focus { color: #2f73f7; }
+
+.notes-reader em,
+.notes-reader i { font-style: italic; }
+
+.notes-reader strong,
+.notes-reader b { font-weight: normal; }
+
+.notes-reader hr { border: none; text-align: center; margin: 2em 0; }
+.notes-reader hr:after { content: '✴\FE0E'; color: #2f73f7; }
+
+.post-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 0.9375em;
+  text-align: center;
+  font-feature-settings: "smcp" 1, "c2sc" 1;
+  /* Pinned to the same type as the nav titles; see --title-size. */
+  font-size: var(--title-size);
+  letter-spacing: var(--title-tracking);
+}
+
+/* A mark standing in for words in a title. A currentColor-filled mask, not
+   an <img>, so it takes the hover and active colours with the label. */
+.title-mark {
+  flex: none;
+  aspect-ratio: 1;
+  background-color: currentColor;
+  -webkit-mask: var(--mark) center / contain no-repeat;
+  mask: var(--mark) center / contain no-repeat;
+}
+
+/* The mark sits in a square viewBox with its own margins, so this is tuned
+   by eye rather than being a literal fraction of the cell. */
+.notes-nav-item .title-mark { height: 70%; }
+
+.post-title .title-mark { height: 1.6em; }
+
+.post-date {
+  text-align: center;
+  margin-top: 0.625em;
+  opacity: 0.7;
+}
+
+.post-body { margin-top: 1.25em; }
+
+/* The fixed-width reading column, centred in the pane. */
+.post-body p,
+.post-body ul,
+.post-body ol,
+.post-nav {
+  max-width: var(--measure);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.post-body p + p,
+.post-body ul + p,
+.post-body p + ul,
+.post-body ol + p,
+.post-body p + ol,
+.post-body p + blockquote,
+.post-body blockquote + p,
+.post-body blockquote + blockquote,
+.post-body li + li {
+  margin-top: 0.625em;
+}
+
+.post-body blockquote { margin: 0; }
+
+.post-body blockquote p {
+  padding-left: 1.25em;
+  max-width: calc(var(--measure) - 1.25em);
+}
+
+.post-body ul {
+  list-style-type: none;
+  padding-left: 2em;
+}
+
+.post-body ol {
+  list-style-type: none;
+  counter-reset: list;
+  padding-left: 1.25em;
+}
+
+.post-body li { position: relative; }
+
+.post-body ol > li:before {
+  position: absolute;
+  counter-increment: list;
+  content: counter(list);
+  margin-left: -1.25em;
+}
+
+.post-body ul > li:before {
+  position: absolute;
+  content: '\00B7';
+  margin-left: -1em;
+}
+
+.post-body img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.post-body img[src$="dsp1.svg"],
+.post-body img[src$="dsp2.svg"] {
+  width: 6.5em;
+}
+
+.post-body img + img { margin-top: 0.625em; }
+
+.mark-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3em;
+  margin-bottom: 0.625em;
+}
+
+.mark-row img { display: block; margin: 0; }
+
+.post-body pre,
+.post-body code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'source-code-pro', consolas, menlo, monospace;
+}
+
+/* Sabon has no U+21DC/21DD, so the arrows come from a fallback symbol font
+   with heavier strokes. Size is the only lever CSS gives for that. */
+.post-nav {
+  display: flex;
+  margin-top: 1.25em;
+  font-size: 1.5em;
+}
+
+.post-nav a { text-decoration: none; }
+
+.post-nav-next { margin-left: auto; }
+
+/* A column-flex item whose auto side margins suppress stretch; without an
+   explicit width it shrink-wraps and the arrows drift off the measure. */
+.project-post .post-nav {
+  width: var(--measure);
+  max-width: 100%;
+}
+
+/* ---- projects (non-note entries) --------------------------------------- */
+
+/* Centred in whatever height the header and prev/next row leave. */
+.project-post {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Shrink-wrapped to the artwork, so the link's hitbox is the image and not
+   the pane's width. align-self both centres and sizes to content. */
+.project {
+  align-self: center;
+  display: block;
+  line-height: 0;
+  text-decoration: none;
+  /* The same gap a post puts between its date and its body. */
+  margin-top: 1.25em;
+}
+
+/* The window's height, not the pane's -- the pane grows to its content now.
+   Reserves the padding, the title/date header and the prev/next row. */
+.project-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 13em);
+  width: auto;
+  height: auto;
+}
+
+/* ---- narrow: the canvas dropped, the spine kept ----------------------- */
+
+/* Below this the fixed canvas is abandoned entirely -- 32 columns across a
+   phone is a 12px unit, which cannot carry pinned type -- and the
+   composition is rebuilt in flow: one spine down the middle of the page with
+   everything hung off it. grid.js reads --narrow and stops writing inline
+   geometry.
+
+   Three conditions, since the canvas is sized off both axes and room is not
+   a question of width alone: too narrow (the column drops under ~220px),
+   too short (a 1366x768 laptop and a landscape phone are equally cramped),
+   or touch (an iPad Pro in landscape has room but wants this layout). */
+@media (max-width: 1120px), (max-height: 790px), (pointer: coarse) {
+  /* Tablet-and-up values; the phone block at the foot of the file walks them
+     down. One type size for everything on screen, as on desktop. */
+  :root {
+    --narrow: 1;
+    --margin: 2rem;
+    --title-size: 22px;
+    --title-tracking: 2px;
   }
+
+  /* Inset moves from the body to the canvas so the spine, absolutely
+     positioned inside it, still runs the document's full height. The bottom
+     padding is where it carries on past the last entry. */
+  body { padding: 0; }
+
+  /* Capped and centred: unconstrained, the post box runs to a ~95-character
+     measure. 48rem gives roughly 65 characters at 22px. */
+  .grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 48rem;
+    margin-inline: auto;
+    height: auto;
+    min-height: 100vh;
+    padding: 0 var(--margin) 4rem;
+  }
+
+  /* Dissolves the column's box so its rows become siblings of the pane; the
+     only way `order` can put the title above the post and entries below. */
+  .notes-nav { display: contents; }
+
+  /* Shard, site title, post, index. The index last so a deep link lands on
+     the prose rather than a screenful of contents. */
+  .point { order: 1; }
+  .notes-nav-item.notes-nav-head { order: 2; }
+  .notes-reader { order: 3; }
+  .notes-nav-item { order: 4; }
+
+  /* The spine, down the page instead of the canvas. */
+  .grid-line-vertical {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+  }
+
+  /* `relative`, not `static`: the spine is positioned, so only another
+     positioned box can paint over it. */
+  .point {
+    position: relative;
+    z-index: 3;
+    align-self: center;
+    /* `em`, not a percentage: the rows are a fixed 14em, so anything
+       proportional drifts against them as the page widens to the cap. */
+    width: 8.5em;
+    margin: 2rem 0;
+    transform: none;
+  }
+
+  /* The opened cell: ruled like a title row but full-width where the closed
+     ones are inset, so it reads as an entry opened out. The margins let the
+     spine show above and below it rather than simply stopping. */
+  .notes-reader {
+    position: relative;
+    z-index: 2;
+    width: auto;
+    background: #360816;
+    border: var(--line-weight) solid #2f73f7;
+    margin: 2em 0;
+    --measure: 100%;
+    font-size: var(--title-size);
+    padding: 1.25em 1.25em 1.5em;
+  }
+
+  /* The closed cells: a narrow column centred on the spine. 14em keeps the
+     rules about as far from the type as the desktop column does, and the
+     inset is what lets the opened post read as wider. They need stacking of
+     their own now the column's box is gone, or the spine paints over the
+     fill meant to break it. */
+  .notes-nav-item {
+    position: relative;
+    z-index: 2;
+    width: 14em;
+    max-width: 100%;
+    align-self: center;
+  }
+
+  /* One height for every row: layoutNav() isn't running, so a two-line title
+     would otherwise stand taller. 3.6em holds two lines, which is what the
+     longest titles take at 14em. Previews size from aspect-ratio. */
+  .notes-nav-item:not(.notes-nav-preview) { height: 3.6em; }
+
+  /* Alone between the shard and the post, so it closes itself. */
+  .notes-nav-item.notes-nav-head {
+    border-bottom-width: var(--line-weight);
+  }
+
+  /* layoutNav() took their height from the column's width. */
+  .notes-nav-preview { aspect-ratio: 1; }
+}
+
+/* ---- phone: the narrow layout, scaled down --------------------------- */
+
+/* 22px over a ~350px box is barely 30 characters a line. Walks the type and
+   the cap down together; the composition is unchanged, only its scale. */
+@media (max-width: 600px) {
+  :root {
+    --margin: 1.25rem;
+    --title-size: 19px;
+    --title-tracking: 1.5px;
+  }
+
+  .grid { max-width: 36rem; }
+
+  .notes-reader { padding: 1.25em 0.75em 1.5em; }
 }

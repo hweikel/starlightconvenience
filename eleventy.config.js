@@ -1,5 +1,6 @@
 module.exports = function (eleventyConfig) {
   eleventyConfig.ignores.add("README.md");
+  eleventyConfig.ignores.add("CLAUDE.md");
 
   eleventyConfig.addCollection("notes", function (collectionApi) {
     return collectionApi.getFilteredByGlob("notes/**/*.md")

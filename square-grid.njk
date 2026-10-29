@@ -1,0 +1,406 @@
+---
+permalink: /square-grid.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en" class="squares-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starlight Convenience — square grid test</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%232f73f7'>✴</text></svg>">
+  <!-- Borrowed only for the typeface, the palette and --line-weight, so this
+       test reads in the same material as the real page. -->
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <style>
+    /* site.css pins the page to the viewport for the fixed 32x20 canvas --
+       flex body, 7.5rem margin, overflow hidden. None of that applies: this
+       grid is full-bleed horizontally and as tall as its rows need. */
+    html.squares-root,
+    body.squares-page {
+      height: auto;
+      min-height: 100%;
+      overflow: visible;
+    }
+
+    /* The grid can outrun the window, so for the first time the page itself
+       has a scrollbar -- matched to the panes' rather than left native. */
+    html.squares-root {
+      scrollbar-width: thin;
+      scrollbar-color: #2f73f7 transparent;
+    }
+
+    html.squares-root::-webkit-scrollbar { width: 4px; }
+    html.squares-root::-webkit-scrollbar-track { background: transparent; }
+    html.squares-root::-webkit-scrollbar-thumb { background: #2f73f7; }
+
+    body.squares-page {
+      display: block;
+      padding: 0;
+    }
+
+    /* Full viewport width, height set in pixels by layout(). In flow rather
+       than fixed, so the composition scrolls as one piece. */
+    .squares {
+      position: relative;
+      width: 100%;
+      /* How far short of each end a rule stops. The grid has no outer frame,
+         so this gap is what keeps the open ends off the viewport edges. */
+      --gap: 24px;
+    }
+
+    /* Drawn as their own elements rather than cell borders: only the interior
+       divisions exist, and each runs past its cells to near the page edge. */
+    .square-line {
+      position: absolute;
+      background: #2f73f7;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Preview centred in the space above, title on the floor of the cell,
+       date in the top-right corner. The rows are assigned explicitly below
+       rather than auto-placed, so a post with no preview still hangs its
+       title at the bottom instead of dropping into the art row. */
+    .slot {
+      position: absolute;
+      z-index: 2;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      justify-items: center;
+      text-align: center;
+      padding: 0.7em;
+      overflow: hidden;
+      color: #ffef91;
+      text-decoration: none;
+      /* One size for every piece of text in the grid; the children inherit
+         it, so the padding above is in those same units too. */
+      font-size: var(--slot-type, 18px);
+    }
+
+    a.slot:hover,
+    a.slot:focus { color: #2f73f7; }
+
+    /* Matches the nav titles' small caps and tracking. */
+    .slot-title {
+      grid-row: 2;
+      font-feature-settings: "smcp" 1, "c2sc" 1;
+      letter-spacing: var(--title-tracking);
+      line-height: 1.3;
+    }
+
+    /* Oldstyle figures and the same muted weight .post-date carries. */
+    .slot-date {
+      position: absolute;
+      top: 0.7em;
+      right: 0.7em;
+      line-height: 1;
+      opacity: 0.7;
+      font-variant-numeric: oldstyle-nums;
+      font-feature-settings: 'onum';
+    }
+
+    /* Shrink-wraps the image so the mark can hang off the artwork's corner
+       rather than the cell's. The image is capped in pixels by layout(), not
+       in per cent: a percentage max-height against this auto-height wrapper
+       would resolve to none and let a tall cover overflow. */
+    .slot-art {
+      grid-row: 1;
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+    }
+
+    .slot-img {
+      display: block;
+      max-width: var(--art-max-w, 80%);
+      max-height: var(--art-max-h, 70%);
+      width: auto;
+      height: auto;
+    }
+
+    /* Same currentColor-filled mask as .title-mark, hung off the image's
+       top-left corner instead of leading a label. */
+    .slot-mark {
+      position: absolute;
+      left: -9%;
+      top: -9%;
+      width: 18%;
+      aspect-ratio: 1;
+      background-color: currentColor;
+      -webkit-mask: var(--mark) center / contain no-repeat;
+      mask: var(--mark) center / contain no-repeat;
+    }
+
+    /* The masthead is not a post -- no date, no preview -- and its label
+       reads as a title rather than a caption, so it sits in the middle
+       instead of on the floor. */
+    .slot-masthead .slot-title { grid-row: 1; }
+  </style>
+</head>
+<body class="squares-page">
+  <div id="squares" class="squares"></div>
+  <script>
+  /* A flat grid of equal squares holding the same elements as the homepage --
+     the pottery shard, the site title, then every note and project newest
+     first -- filled left to right, top to bottom.
+
+     Unframed: only the interior divisions are drawn, and each stops short of
+     the page edge rather than closing into a border. Cells are sized off the
+     viewport width (COLS of them across, square), so the grid is as tall as
+     its rows need and scrolls when that exceeds the window.
+
+     Standalone: nothing here is shared with index.html / js/grid.js. */
+  (function () {
+    /* Cells across. The only free variable in the layout -- cell size and row
+       count both follow from it and the viewport width. */
+    var COLS = 5;
+    /* Every title and date in the grid shares one size: the nav's 22px,
+       knocked back by this much. */
+    var TYPE_SCALE = 0.8;
+    var FRAGMENT = '/assets/images/star-fragment.png';
+
+    var root = document.getElementById('squares');
+    var lineLayer = document.createElement('div');
+    var slots = [];
+    var nodes = [];
+
+    root.appendChild(lineLayer);
+
+    function el(tag, className) {
+      var e = document.createElement(tag);
+      if (className) e.className = className;
+      return e;
+    }
+
+    function link(node, href) {
+      node.href = href;
+      if (/^https?:\/\//.test(href)) {
+        node.target = '_blank';
+        node.rel = 'noopener';
+      }
+      return node;
+    }
+
+    /* Whole device pixels only, as in grid.js: a fractional offset
+       antialiases across two rows and reads as a heavier line. */
+    function snap(v) {
+      var dpr = window.devicePixelRatio || 1;
+      return Math.round(v * dpr) / dpr;
+    }
+
+    function cssPx(node, name, fallback) {
+      return parseFloat(getComputedStyle(node).getPropertyValue(name)) || fallback;
+    }
+
+    /* Year and month only. Read off the string rather than through Date, so
+       notes.json's UTC timestamps can't slip a month in a western timezone,
+       and projects.json's bare "2026-06" needs no special case. */
+    function formatDate(date) {
+      var parts = String(date).split('-');
+      return parts[0] + ' · ' + parts[1];
+    }
+
+    /* Same newest-first merge the real nav uses, so the fill order matches the
+       column's. */
+    function mergeEntries(notes, projects) {
+      var merged = notes.map(function (note) {
+        return { id: note.slug, title: note.title, date: note.date, note: note };
+      }).concat(projects.map(function (project) {
+        return { id: project.id, title: project.title, date: project.date, project: project };
+      }));
+      merged.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+      return merged;
+    }
+
+    function buildSlots(entries) {
+      var out = [
+        { kind: 'fragment', img: FRAGMENT, href: '/' },
+        { kind: 'masthead', title: 'Starlight Convenience', href: '/' }
+      ];
+      entries.forEach(function (entry) {
+        if (entry.project) {
+          out.push({
+            kind: 'project',
+            title: entry.title,
+            date: entry.date,
+            img: entry.project.img,
+            alt: entry.project.alt,
+            mark: entry.project.mark,
+            markAlt: entry.project.markAlt,
+            href: entry.project.href
+          });
+        } else {
+          out.push({
+            kind: 'note',
+            title: entry.title,
+            date: entry.date,
+            slug: entry.note.slug,
+            href: '/notes/' + entry.note.slug + '/'
+          });
+        }
+      });
+      return out;
+    }
+
+    /* The art block, wrapper and all -- built here rather than in build()
+       because a note's preview only arrives once its fragment has loaded. */
+    function renderArt(slot) {
+      var art = el('span', 'slot-art');
+      var img = el('img', 'slot-img');
+      img.src = slot.img;
+      img.alt = slot.alt || '';
+      art.appendChild(img);
+
+      if (slot.mark) {
+        var mark = el('span', 'slot-mark');
+        mark.style.setProperty('--mark', 'url("' + slot.mark + '")');
+        if (slot.markAlt) {
+          mark.setAttribute('role', 'img');
+          mark.setAttribute('aria-label', slot.markAlt);
+        }
+        art.appendChild(mark);
+      }
+
+      return art;
+    }
+
+    function build() {
+      slots.forEach(function (slot) {
+        var node = el(slot.href ? 'a' : 'div', 'slot slot-' + slot.kind);
+        if (slot.href) link(node, slot.href);
+        slot.node = node;
+
+        if (slot.date) {
+          var date = el('div', 'slot-date');
+          date.textContent = formatDate(slot.date);
+          node.appendChild(date);
+        }
+
+        if (slot.img) node.appendChild(renderArt(slot));
+
+        if (slot.title) {
+          var title = el('div', 'slot-title');
+          title.textContent = slot.title;
+          node.appendChild(title);
+        }
+
+        nodes.push(node);
+        root.appendChild(node);
+      });
+    }
+
+    /* Note bodies aren't in notes.json and `previewImage` is empty on every
+       post, so the preview comes from the fragment the reader already serves:
+       take its first body image. Inserted after the fact -- it lands in the
+       art row, which doesn't affect any cell's geometry, so no relayout. */
+    function loadPreviews() {
+      slots.forEach(function (slot) {
+        if (slot.kind !== 'note') return;
+        fetch('/notes/' + slot.slug + '/content.html')
+          .then(function (r) { return r.text(); })
+          .then(function (html) {
+            var doc = new DOMParser().parseFromString(html, 'text/html');
+            var img = doc.querySelector('.post-body img');
+            if (!img) return;
+            slot.img = img.getAttribute('src');
+            slot.alt = img.getAttribute('alt');
+            slot.node.insertBefore(renderArt(slot), slot.node.querySelector('.slot-title'));
+          })
+          .catch(function () {});
+      });
+    }
+
+    /* Cells are positioned from the snapped division offsets rather than from
+       `size`, so each one is bounded exactly by the rules drawn around it --
+       a cell can be a pixel off square; a line can't be off weight. */
+    function place(width) {
+      var size = width / COLS;
+      var rows = Math.ceil(nodes.length / COLS);
+      var height = snap(rows * size);
+
+      var xs = [];
+      var ys = [];
+      var i;
+      for (i = 0; i <= COLS; i++) xs.push(snap(i * size));
+      for (i = 0; i <= rows; i++) ys.push(snap(i * size));
+
+      root.style.height = height + 'px';
+      root.style.setProperty('--slot-type', Math.min(22, size * 0.073) * TYPE_SCALE + 'px');
+      /* Height is the tighter cap: the art shares its cell with a title on
+         the floor and a date in the corner. */
+      root.style.setProperty('--art-max-w', (size * 0.8) + 'px');
+      root.style.setProperty('--art-max-h', (size * 0.7) + 'px');
+
+      nodes.forEach(function (node, k) {
+        var c = k % COLS;
+        var r = Math.floor(k / COLS);
+        node.style.left = xs[c] + 'px';
+        node.style.top = ys[r] + 'px';
+        node.style.width = (xs[c + 1] - xs[c]) + 'px';
+        node.style.height = (ys[r + 1] - ys[r]) + 'px';
+      });
+
+      drawLines(xs, ys, width, height);
+    }
+
+    function layout() {
+      if (!nodes.length) return;
+      /* clientWidth, not innerWidth: it already excludes the scrollbar. */
+      var width = root.clientWidth;
+      place(width);
+      /* Setting the height can bring the scrollbar in, which narrows the
+         container -- a second pass settles it. */
+      if (root.clientWidth !== width) place(root.clientWidth);
+    }
+
+    /* Interior divisions only -- the first and last offset on each axis are
+       the outer frame, which this layout doesn't have. Every rule is inset by
+       --gap at both ends so it stops just short of the page edge. */
+    function drawLines(xs, ys, width, height) {
+      var weight = cssPx(document.documentElement, '--line-weight', 1);
+      var gap = cssPx(root, '--gap', 0);
+      var runH = Math.max(0, width - 2 * gap);
+      var runV = Math.max(0, height - 2 * gap);
+
+      lineLayer.innerHTML = '';
+
+      for (var i = 1; i < xs.length - 1; i++) {
+        var v = el('div', 'square-line');
+        v.style.left = xs[i] + 'px';
+        v.style.top = gap + 'px';
+        v.style.width = weight + 'px';
+        v.style.height = runV + 'px';
+        lineLayer.appendChild(v);
+      }
+
+      for (var j = 1; j < ys.length - 1; j++) {
+        var h = el('div', 'square-line');
+        h.style.left = gap + 'px';
+        h.style.top = ys[j] + 'px';
+        h.style.width = runH + 'px';
+        h.style.height = weight + 'px';
+        lineLayer.appendChild(h);
+      }
+    }
+
+    function fetchJson(url) {
+      return fetch(url).then(function (r) { return r.json(); }).catch(function () { return []; });
+    }
+
+    Promise.all([
+      fetchJson('/notes.json'),
+      fetchJson('/_data/projects.json')
+    ]).then(function (results) {
+      slots = buildSlots(mergeEntries(results[0], results[1]));
+      build();
+      layout();
+      loadPreviews();
+      window.addEventListener('resize', layout);
+      window.addEventListener('load', layout);
+    });
+  })();
+  </script>
+</body>
+</html>

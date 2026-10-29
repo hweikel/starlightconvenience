@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cabinet-001",
+    "title": "assemble these revered objects",
+    "date": "2026-06",
+    "href": "https://www.henryweikel.net/",
+    "img": "/assets/images/henryweikel-wunderkammer.jpg",
+    "alt": "A cabinet of curiosities laid out on blue paper"
+  },
+  {
+    "id": "late-ghost-stories",
+    "title": "001",
+    "date": "2025-10",
+    "href": "https://dancingstar.press/",
+    "img": "/assets/images/james-cover.jpg",
+    "alt": "Cover of The Late Ghost Stories of Henry James",
+    "mark": "/assets/images/dsp1-cream.svg",
+    "markAlt": "Dancing Star Press"
+  }
+]
