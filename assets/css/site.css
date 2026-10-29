@@ -172,16 +172,6 @@ a { color: inherit; }
 a.row:hover,
 a.row.active { color: var(--rule); }
 
-.row-links {
-  gap: 1.5em;
-  font-size: 0.75em;
-  letter-spacing: 1px;
-  opacity: 0.75;
-}
-
-.row-links a { text-decoration: none; }
-.row-links a:hover { color: var(--rule); }
-
 /* ---- reading pane ---------------------------------------------------- */
 
 .reader {
@@ -442,8 +432,6 @@ a.row.active { color: var(--rule); }
 
   /* Alone between the shard and the post, so it closes itself. */
   .row.row-head { border-bottom-width: var(--line-weight); }
-
-  .row.row-links { height: auto; }
 
   /* The opened cell: ruled like a row but full width, so it reads as an
      entry opened out. The margins let the spine show above and below it. */
