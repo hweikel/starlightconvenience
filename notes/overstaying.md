@@ -3,7 +3,7 @@ title: "Overstaying"
 date: 2022-01-01
 tags: fiction
 previewImage: ""
-layout: post.njk
+layout: note.njk
 ---
 A few months after graduation there was an issue with my visa. I didn’t understand the problem and judging from their letters neither did the Home Office. All the same, the letters came with startling regularity, urging a level of diligence with paperwork that was beyond me. When the word “deportation” finally appeared beneath the envelope’s little plastic window, I felt an incredible sense of relief. It gave me an excuse to put into action a plan that I had been considering since I first arrived in London. After saying farewell to a few acquaintances in the City, I abandoned my rented room, sold all of my possessions, and moved into the Barbican.
 

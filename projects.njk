@@ -1,0 +1,22 @@
+---
+layout: base.njk
+pagination:
+  data: projects
+  size: 1
+  alias: project
+permalink: "/projects/{{ project.id }}/"
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  activeId: "{{ project.id }}"
+  title: "{{ project.title }}"
+---
+<article class="post post-project">
+  <h1 class="post-title">
+    {%- if project.mark %}<span class="title-mark" style="--mark: url('{{ project.mark | url }}')"{% if project.markAlt %} role="img" aria-label="{{ project.markAlt }}"{% endif %}></span>{% endif -%}
+    <span class="title-text">{{ project.title }}</span>
+  </h1>
+  <div class="post-date">{{ project.date | replace("-", " · ") }}</div>
+  <a class="project" href="{{ project.href }}" target="_blank" rel="noopener">
+    <img class="project-img" src="{{ project.img | url }}" alt="{{ project.alt }}">
+  </a>
+</article>

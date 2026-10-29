@@ -1,0 +1,472 @@
+@font-face {
+  font-family: 'SabonLTPro';
+  src: url('/fonts/SabonLTPro-Roman.eot');
+  src: url('/fonts/SabonLTPro-Roman.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/SabonLTPro-Roman.woff') format('woff'),
+       url('/fonts/SabonLTPro-Roman.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SabonLTPro';
+  src: url('/fonts/SabonLTPro_Italic.eot');
+  src: url('/fonts/SabonLTPro_Italic.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/SabonLTPro_Italic.woff') format('woff'),
+       url('/fonts/SabonLTPro_Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --ink: #ffef91;
+  --ground: #360816;
+  --rule: #2f73f7;
+  --line-weight: 1px;
+
+  /* The room left of the column. */
+  --margin: 7.5rem;
+
+  /* The column's width, and the unit the whole composition is built from:
+     the old canvas was 32x20 over a 16:10 box, so a column and a row were
+     the same length and the nav column was 8 of them. */
+  --col-w: clamp(17rem, 19vw, 21rem);
+  --cell: calc(var(--col-w) / 8);
+
+  /* One pinned size for the nav titles, the post headings and the prose, so
+     a title reads identically in the column and over the post. */
+  --title-size: 22px;
+  --title-tracking: 2px;
+}
+
+/* `scroll`, not `auto`: a scrollbar appearing on a long post would otherwise
+   shift the whole composition left. */
+html {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+
+html::-webkit-scrollbar { width: 4px; }
+html::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb { background: var(--rule); }
+
+body {
+  min-height: 100%;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'SabonLTPro', 'Times New Roman', Georgia, serif;
+}
+
+a { color: inherit; }
+
+/* ---- layout ---------------------------------------------------------- */
+
+.page {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--col-w) 1fr;
+  min-height: 100vh;
+  margin-left: var(--margin);
+}
+
+/* The spine. Drawn on the page rather than the column so it survives the
+   column dissolving at narrow widths, and so it runs the document's full
+   height without being measured -- the grid row is as tall as the taller of
+   the two sides. Rows and the pane paint over it; that is what breaks it. */
+.page::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--col-w) / 2);
+  width: var(--line-weight);
+  background: var(--rule);
+}
+
+.column {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  /* The gap the shard hangs in, and the spine's run past the last row. */
+  padding-top: calc(var(--margin) + 1.75 * var(--cell));
+  padding-bottom: calc(3 * var(--cell));
+}
+
+/* Centred on the spine, half way down the gap above the first row. */
+.shard {
+  position: absolute;
+  z-index: 3;
+  top: calc((var(--margin) + 1.75 * var(--cell)) / 2);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(3.3 * var(--cell));
+}
+
+.shard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 900 / 869;
+}
+
+/* ---- the column's rows ----------------------------------------------- */
+
+/* Rows carry their own rules rather than sitting between shared ones, so a
+   run can end wherever an unboxed image entry interrupts the column. The
+   fill is required, not cosmetic: it is what breaks the spine behind a run.
+   `min-height` rather than `height` so a wrapped title grows its row. */
+.row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: calc(1.85 * var(--cell));
+  padding: 0.4em 0.8em;
+  text-align: center;
+  text-decoration: none;
+  font-feature-settings: "smcp" 1, "c2sc" 1;
+  font-size: var(--title-size);
+  letter-spacing: var(--title-tracking);
+  line-height: 1.3;
+  border: var(--line-weight) solid var(--rule);
+  border-bottom-width: 0;
+  background: var(--ground);
+}
+
+/* Closes a run: the foot of the column, or the row above an image entry,
+   which carries no rules to close it from below. */
+.row:last-child,
+.row:has(+ .row-image) {
+  border-bottom-width: var(--line-weight);
+}
+
+/* Image entries carry no rules and no fill, so the spine shows behind them
+   and the preview rides it the way the shard does. Square, so the break
+   they open scales with the column. */
+.row.row-image {
+  border-width: 0;
+  background: none;
+  padding: 0;
+  min-height: 0;
+  aspect-ratio: 1;
+}
+
+.row-img {
+  display: block;
+  width: auto;
+  height: 80%;
+  max-width: 80%;
+  object-fit: contain;
+}
+
+a.row:hover,
+a.row.active { color: var(--rule); }
+
+.row-links {
+  gap: 1.5em;
+  font-size: 0.75em;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+.row-links a { text-decoration: none; }
+.row-links a:hover { color: var(--rule); }
+
+/* ---- reading pane ---------------------------------------------------- */
+
+.reader {
+  position: relative;
+  z-index: 2;
+  /* 26 x 1.25 x 22px, the measure the posts have always had. Size in `em`
+     off the base below, never `rem` -- the root here is 16px. */
+  --measure: 715px;
+  padding: 1.25em 1.25em 3.75em;
+  font-family: 'SabonLTPro', 'Times New Roman', Georgia, 'Noto Serif KR',
+               'Noto Serif JP', 'Noto Serif TC', 'Songti TC', 'HiraMinProN',
+               'Hiragino Mincho ProN', 'Yu Gothic', 'Hiragino Sans GB',
+               'Heiti TC', serif;
+  font-size: var(--title-size);
+  line-height: 1.25;
+  font-variant-numeric: oldstyle-nums;
+  font-feature-settings: 'onum';
+}
+
+.reader h1,
+.reader h2,
+.reader h3,
+.reader h4,
+.reader h5,
+.reader h6 {
+  font-size: inherit;
+  font-weight: normal;
+  font-family: inherit;
+}
+
+.reader a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.reader a:hover,
+.reader a:focus { color: var(--rule); }
+
+.reader em,
+.reader i { font-style: italic; }
+
+.reader strong,
+.reader b { font-weight: normal; }
+
+.reader hr { border: none; text-align: center; margin: 2em 0; }
+.reader hr:after { content: '✴\FE0E'; color: var(--rule); }
+
+.post-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 0.9375em;
+  text-align: center;
+  font-feature-settings: "smcp" 1, "c2sc" 1;
+  font-size: var(--title-size);
+  letter-spacing: var(--title-tracking);
+}
+
+/* A mark standing in for words in a title. A currentColor-filled mask, not
+   an <img>, so it takes the surrounding colour. */
+.title-mark {
+  flex: none;
+  aspect-ratio: 1;
+  height: 1.6em;
+  background-color: currentColor;
+  -webkit-mask: var(--mark) center / contain no-repeat;
+  mask: var(--mark) center / contain no-repeat;
+}
+
+.post-date {
+  text-align: center;
+  margin-top: 0.625em;
+  opacity: 0.7;
+}
+
+.post-body { margin-top: 1.25em; }
+
+/* The fixed-width reading column, centred in the pane. */
+.post-body p,
+.post-body ul,
+.post-body ol,
+.post-nav {
+  max-width: var(--measure);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.post-body p + p,
+.post-body ul + p,
+.post-body p + ul,
+.post-body ol + p,
+.post-body p + ol,
+.post-body p + blockquote,
+.post-body blockquote + p,
+.post-body blockquote + blockquote,
+.post-body li + li {
+  margin-top: 0.625em;
+}
+
+.post-body blockquote { margin: 0; }
+
+.post-body blockquote p {
+  padding-left: 1.25em;
+  max-width: calc(var(--measure) - 1.25em);
+}
+
+.post-body ul {
+  list-style-type: none;
+  padding-left: 2em;
+}
+
+.post-body ol {
+  list-style-type: none;
+  counter-reset: list;
+  padding-left: 1.25em;
+}
+
+.post-body li { position: relative; }
+
+.post-body ol > li:before {
+  position: absolute;
+  counter-increment: list;
+  content: counter(list);
+  margin-left: -1.25em;
+}
+
+.post-body ul > li:before {
+  position: absolute;
+  content: '\00B7';
+  margin-left: -1em;
+}
+
+.post-body img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.post-body img[src$="dsp1.svg"],
+.post-body img[src$="dsp2.svg"] { width: 6.5em; }
+
+.post-body img + img { margin-top: 0.625em; }
+
+.mark-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3em;
+  margin-bottom: 0.625em;
+}
+
+.mark-row img { display: block; margin: 0; }
+
+.post-body pre,
+.post-body code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'source-code-pro', consolas, menlo, monospace;
+}
+
+/* Sabon has no U+21DC/21DD, so the arrows come from a fallback symbol font
+   with heavier strokes. Size is the only lever CSS gives for that. */
+.post-nav {
+  display: flex;
+  margin-top: 1.25em;
+  font-size: 1.5em;
+}
+
+.post-nav a { text-decoration: none; }
+.post-nav-next { margin-left: auto; }
+
+/* ---- projects -------------------------------------------------------- */
+
+/* Shrink-wrapped to the artwork so the link's hitbox is the image, not the
+   pane's width. */
+.project {
+  display: block;
+  width: fit-content;
+  margin: 1.25em auto 0;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.project-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 13em);
+  width: auto;
+  height: auto;
+}
+
+/* ---- narrow ---------------------------------------------------------- */
+
+/* One column, spine down the middle of the page. 1180px is where the pane
+   stops holding its measure beside the column. */
+@media (max-width: 1180px) {
+  :root { --margin: 2rem; }
+
+  .page {
+    grid-template-columns: 1fr;
+    max-width: 48rem;
+    margin-inline: auto;
+    padding: 0 var(--margin) 4rem;
+  }
+
+  .page::before { left: 50%; }
+
+  /* Dissolves the column's box so its rows become grid items of the page --
+     the only way `order` can put the title above the post and the rest
+     below it. The index goes last so a visitor lands on the prose. */
+  .column { display: contents; }
+
+  /* Compound selectors: .row-head also matches .row, and an equal-specificity
+     .row rule later in the block would otherwise win and sink the title. */
+  .shard { order: 1; }
+  .row { order: 4; }
+  .row.row-head { order: 2; }
+  .reader { order: 3; }
+
+  /* Dissolving the column also dissolves the stacking context that held its
+     rows above the spine, so each one has to carry its own. */
+  .row,
+  .reader {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* In flow now, and no longer centred by the column's own box. Sized off the
+     type rather than --cell: --cell comes from the clamped column width, so
+     it stops shrinking well before a phone does. */
+  .shard {
+    position: relative;
+    z-index: 3;
+    justify-self: center;
+    top: auto;
+    left: auto;
+    width: calc(8.5 * var(--title-size));
+    margin: 2rem 0;
+    transform: none;
+  }
+
+  /* A narrow column of closed cells on the spine; the inset is what lets the
+     opened post read as wider. One fixed height for every row, since a
+     two-line title would otherwise stand taller than its neighbours. */
+  .row {
+    width: 14em;
+    max-width: 100%;
+    justify-self: center;
+    height: 3.6em;
+    min-height: 0;
+  }
+
+  .row.row-image {
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  /* Alone between the shard and the post, so it closes itself. */
+  .row.row-head { border-bottom-width: var(--line-weight); }
+
+  .row.row-links { height: auto; }
+
+  /* The opened cell: ruled like a row but full width, so it reads as an
+     entry opened out. The margins let the spine show above and below it. */
+  .reader {
+    --measure: 100%;
+    border: var(--line-weight) solid var(--rule);
+    background: var(--ground);
+    margin: 2em 0;
+    padding: 1.25em 1.25em 1.5em;
+  }
+}
+
+/* 22px over a phone's ~350px box is barely 30 characters a line. Walks the
+   type and the cap down together; the composition is unchanged, only its
+   scale. */
+@media (max-width: 600px) {
+  :root {
+    --margin: 1.25rem;
+    --title-size: 19px;
+    --title-tracking: 1.5px;
+  }
+
+  .page { max-width: 36rem; }
+
+  .reader { padding: 1.25em 0.75em 1.5em; }
+}

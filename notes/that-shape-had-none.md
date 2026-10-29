@@ -3,7 +3,7 @@ title: "That Shape Had None"
 date: 2023-06-24
 tags: fiction
 previewImage: ""
-layout: post.njk
+layout: note.njk
 ---
 > ... The other shape,  
 > If shape it might be call'd that shape had none  

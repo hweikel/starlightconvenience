@@ -3,7 +3,7 @@ title: "Bare backs & black trousers"
 date: 2017-10-20
 tags: fiction
 previewImage: ""
-layout: post.njk
+layout: note.njk
 ---
 Dreams haunted by this scene from *Anne*, Paal Helge-Haugen’s 1968 *punktroman*: a novel composed of ”points.” Translation mine.
 

@@ -1,3 +1,4 @@
+{%- set active = activeId or page.fileSlug -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,110 +6,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if title %}{{ title }} — {% endif %}Starlight Convenience</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%232f73f7'>✴</text></svg>">
-  <style>
-    @font-face {
-      font-family: 'SabonLTPro';
-      src: url('{{ "/fonts/SabonLTPro-Roman.eot" | url }}');
-      src: url('{{ "/fonts/SabonLTPro-Roman.eot?#iefix" | url }}') format('embedded-opentype'),
-           url('{{ "/fonts/SabonLTPro-Roman.woff" | url }}') format('woff'),
-           url('{{ "/fonts/SabonLTPro-Roman.woff2" | url }}') format('woff2');
-      font-weight: 400;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'SabonLTPro';
-      src: url('{{ "/fonts/SabonLTPro_Italic.eot" | url }}');
-      src: url('{{ "/fonts/SabonLTPro_Italic.eot?#iefix" | url }}') format('embedded-opentype'),
-           url('{{ "/fonts/SabonLTPro_Italic.woff" | url }}') format('woff'),
-           url('{{ "/fonts/SabonLTPro_Italic.woff2" | url }}') format('woff2');
-      font-weight: 400;
-      font-style: italic;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      background: #360816;
-      color: #ffef91;
-      font-family: 'SabonLTPro', 'Times New Roman', Georgia, 'Noto Serif KR',
-                   'Noto Serif JP', 'Noto Serif TC', 'Songti TC', 'HiraMinProN',
-                   'Hiragino Mincho ProN', 'Yu Gothic', 'Hiragino Sans GB',
-                   'Heiti TC', serif;
-      font-size: 22px;
-      line-height: 1.25;
-      font-variant-numeric: oldstyle-nums;
-      font-feature-settings: 'onum';
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-size: inherit;
-      font-weight: normal;
-      font-family: inherit;
-    }
-
-    a {
-      color: #ffef91;
-      text-decoration: underline;
-    }
-
-    a:hover, a:focus {
-      color: #2f73f7;
-    }
-
-    em, i {
-      font-style: italic;
-    }
-
-    strong, b {
-      font-weight: normal;
-    }
-
-    hr {
-      border: none;
-      text-align: center;
-      margin: 2rem 0;
-    }
-
-    hr:after {
-      content: '✴\FE0E';
-      color: #2f73f7;
-    }
-
-    .site-header {
-      padding: 1.25rem;
-    }
-
-    .site-title {
-      font-size: 1rem;
-      font-weight: normal;
-    }
-
-    .content {
-      max-width: calc(21 * 1.25rem);
-      margin: 0 auto;
-      padding: 1.25rem 1.25rem calc(3 * 1.25rem);
-    }
-
-    @media screen and (max-width: 800px) {
-      html, body {
-        font-size: 18px;
-        line-height: 1.2;
-      }
-    }
-  </style>
-
+  <link rel="alternate" type="application/atom+xml" title="Starlight Convenience" href="{{ '/feed.xml' | url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
 </head>
 <body>
-  <header class="site-header">
-    <a class="site-title" href="{{ '/' | url }}">Starlight Convenience</a>
-  </header>
-  <main class="content">
-    {{ content | safe }}
-  </main>
+  <div class="page">
+    <nav class="column">
+      <a class="shard" href="{{ '/' | url }}">
+        <img src="{{ '/assets/images/star-fragment.png' | url }}" alt="">
+      </a>
+
+      <a class="row row-head" href="{{ '/' | url }}">
+        <span class="row-title">Starlight Convenience</span>
+      </a>
+
+      {%- for entry in collections.entries %}
+      {%- if entry.project %}
+      <a class="row row-image{% if entry.id == active %} active{% endif %}" href="{{ entry.url | url }}">
+        <img class="row-img" src="{{ entry.project.img | url }}" alt="{{ entry.project.alt }}">
+      </a>
+      {%- else %}
+      <a class="row{% if entry.id == active %} active{% endif %}" href="{{ entry.url | url }}">
+        <span class="row-title">{{ entry.title }}</span>
+      </a>
+      {%- endif %}
+      {%- endfor %}
+
+      <div class="row row-links">
+        <a href="{{ '/feed.xml' | url }}">RSS</a>
+        <a href="https://www.henryweikel.net/" target="_blank" rel="noopener">henryweikel.net</a>
+      </div>
+    </nav>
+
+    <main class="reader">
+      {{ content | safe }}
+
+      {%- for entry in collections.entries %}
+      {%- if entry.id == active %}
+      <div class="post-nav">
+        {%- if entry.olderUrl %}<a class="post-nav-prev" href="{{ entry.olderUrl | url }}">⇜︎</a>{% endif %}
+        {%- if entry.newerUrl %}<a class="post-nav-next" href="{{ entry.newerUrl | url }}">⇝︎</a>{% endif %}
+      </div>
+      {%- endif %}
+      {%- endfor %}
+    </main>
+  </div>
 </body>
 </html>
