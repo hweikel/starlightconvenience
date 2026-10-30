@@ -151,22 +151,26 @@ a { color: inherit; }
 }
 
 /* Image entries carry no rules and no fill, so the spine shows behind them
-   and the preview rides it the way the shard does. Square, so the break
-   they open scales with the column. */
+   and the preview rides it the way the shard does. The row is the preview
+   plus its padding rather than a square it letterboxes inside: a landscape
+   preview would otherwise spend its unused height as gap and open a wider
+   break than a portrait one. */
 .row.row-image {
   border-width: 0;
   background: none;
-  padding: 0;
   min-height: 0;
-  aspect-ratio: 1;
+  /* An eighth of the cap below -- the gap the square row gave a portrait. */
+  padding: calc(0.8 * var(--cell)) 0;
 }
 
+/* Both caps are 80% of the column, so the longest side is the same either
+   way the preview is turned. */
 .row-img {
   display: block;
   width: auto;
-  height: 80%;
+  height: auto;
   max-width: 80%;
-  object-fit: contain;
+  max-height: calc(6.4 * var(--cell));
 }
 
 a.row:hover,
@@ -423,12 +427,19 @@ a.row.active { color: var(--rule); }
     justify-self: center;
     height: 3.6em;
     min-height: 0;
+    /* Half the wide tier's: the row is 14em at any type size, so 0.8em a side
+       leaves 12.4em, and the site title needs just over that. */
+    padding-inline: 0.4em;
   }
 
+  /* 11.2em is 80% of the row's 14em and the gap an eighth of that, off the
+     type rather than --cell. */
   .row.row-image {
     height: auto;
-    aspect-ratio: 1;
+    padding: 1.4em 0;
   }
+
+  .row-img { max-height: 11.2em; }
 
   /* Alone between the shard and the post, so it closes itself. */
   .row.row-head { border-bottom-width: var(--line-weight); }
@@ -450,7 +461,7 @@ a.row.active { color: var(--rule); }
 @media (max-width: 600px) {
   :root {
     --margin: 1.25rem;
-    --title-size: 19px;
+    --title-size: 18px;
     --title-tracking: 1.5px;
   }
 

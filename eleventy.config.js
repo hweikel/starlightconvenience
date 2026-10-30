@@ -82,7 +82,9 @@ module.exports = function (eleventyConfig) {
     return content;
   });
 
+  /* Input is the project root, so any root Markdown not ignored here ships. */
   eleventyConfig.ignores.add("README.md");
+  eleventyConfig.ignores.add("CLAUDE.md");
 
   eleventyConfig.addWatchTarget("notes/");
   eleventyConfig.addWatchTarget("_includes/");
